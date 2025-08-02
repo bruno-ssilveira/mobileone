@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, FlatList} from 'react-native';
-import DayListItem from '../../src/core/components/DayListItem';
+import DayListItem from '@/core/components/DayListItem';
 
 const date = new Date();
 const year = date.getFullYear();
