@@ -6,7 +6,7 @@ type DayListItem = {
 }
 
 export default function DayListItem({ day }: DayListItem) {
-    return(
+    return (
         <Link href={`/day${day}`} asChild>
             <Pressable style={styles.box}>
                 <Text style={styles.text}>{day}</Text>
@@ -17,12 +17,12 @@ export default function DayListItem({ day }: DayListItem) {
 
 const styles = StyleSheet.create({
     box: {
-        backgroundColor: '#F9EDE3',
+        backgroundColor: '#009d2aff',
         flex: 1,
         aspectRatio: 1,
 
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: '#9B4521',
+        borderWidth: 6,
+        borderColor: '#000000ff',
         borderRadius: 20,
 
         justifyContent: 'center',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     },
 
     text: {
-        color: '#9B4521',
+        color: '#ffffffff',
         fontSize: 70,
         fontFamily: 'AmaticBold',
     },
