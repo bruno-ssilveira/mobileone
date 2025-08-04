@@ -3,6 +3,9 @@ import { Stack, router } from "expo-router"
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import { GestureDetector, Gesture, Directions } from "react-native-gesture-handler";
+//import Animated, { FadeIn, FadeOut, BounceInRight, BounceOutLeft } from "react-native-reanimated";
 
 const onboardingSteps = [
     {
@@ -34,39 +37,57 @@ export default function OnboardingScreen() {
         } else {
             setScreenIndex(screenIndex + 1);
         }
-    }
+    };
+    const onBack = () => {
+        if(screenIndex === 0) {
+            return;
+        } else {
+            setScreenIndex(screenIndex - 1);
+        }
+    };
 
     const endOnboarding = () => {
         setScreenIndex(0);
         router.back();
     };
 
+    
+    const flingLeft = Gesture.Fling().direction(Directions.LEFT).onEnd((e) => {onContinue();});
+    const flingRight = Gesture.Fling().direction(Directions.RIGHT).onEnd((e) => {onBack();});
+    const composedGesture = Gesture.Simultaneous(flingLeft, flingRight);
+
     return (
         <SafeAreaView style={styles.page}>
             <Stack.Screen options={{ headerShown: false }}/>
+            <StatusBar style="light" />
 
-            <View style={styles.pageContent}>
-                <View style={styles.stepIndicatorContainer}>
-                    {onboardingSteps.map((step, index) => (
-                        <View style={[styles.stepIndicator, {backgroundColor: index === screenIndex ? 'white' : 'gray'}]}/>
-                    ))};
-                </View>
-
-                <FontAwesome6 name={data.icon} size={100} color="#158000ff" style={styles.image} />
-
-                <View style={styles.footer}>
-                    <Text style={styles.title}>{data.title}</Text>
-                    <Text style={styles.description}>{data.text}</Text>
-                </View>
-
-                <View style={styles.buttonsRow}>
-                    <Text style={styles.buttonText} onPress={endOnboarding}>Skip</Text>
-
-                    <Pressable style={styles.button} onPress={onContinue}>
-                        <Text style={styles.buttonText}>Continue</Text>
-                    </Pressable>
-                </View>
+            <View style={styles.stepIndicatorContainer}>
+                {onboardingSteps.map((step, index) => (
+                    <View style={[styles.stepIndicator, {backgroundColor: index === screenIndex ? '#158000ff' : 'gray'}]} key={index}/>
+                ))}
             </View>
+
+            <GestureDetector gesture={composedGesture}>
+                <View
+                    style={styles.pageContent}
+                >
+
+                    <FontAwesome6 name={data.icon} size={100} color="#158000ff" style={styles.image} />
+
+                    <View style={styles.footer}>
+                        <Text style={styles.title}>{data.title}</Text>
+                        <Text style={styles.description}>{data.text}</Text>
+                    </View>
+                    
+                    <View style={styles.buttonsRow}>
+                        <Text style={styles.buttonText} onPress={endOnboarding}>Skip</Text>
+
+                        <Pressable style={styles.button} onPress={onContinue}>
+                            <Text style={styles.buttonText}>Continue</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </GestureDetector>
         </SafeAreaView>
     )
 }
@@ -86,6 +107,7 @@ const styles = StyleSheet.create ({
     image: {
         alignSelf: 'center',
         margin: 20,
+        marginTop: 50,
     },
 
     title: {
@@ -129,12 +151,13 @@ const styles = StyleSheet.create ({
 
     stepIndicatorContainer: {
         flexDirection: 'row',
+        gap: 8,
+        marginHorizontal: 20,
     },
     stepIndicator: {
         flex: 1,
         backgroundColor: 'gray',
-        height: 5,
+        height: 3,
         borderRadius: 10,
-        margin: 5,
     },
 });
