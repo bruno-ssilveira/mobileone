@@ -1,3 +1,6 @@
+import Animated, {
+  runOnJS,
+} from 'react-native-reanimated';
 import { Text, View, StyleSheet, Pressable } from "react-native"
 import { Stack, router } from "expo-router"
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -5,7 +8,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { GestureDetector, Gesture, Directions } from "react-native-gesture-handler";
-//import Animated, { FadeIn, FadeOut, BounceInRight, BounceOutLeft } from "react-native-reanimated";
 
 const onboardingSteps = [
     {
@@ -52,8 +54,8 @@ export default function OnboardingScreen() {
     };
 
     
-    const flingLeft = Gesture.Fling().direction(Directions.LEFT).onEnd((e) => {onContinue();});
-    const flingRight = Gesture.Fling().direction(Directions.RIGHT).onEnd((e) => {onBack();});
+    const flingLeft = Gesture.Fling().direction(Directions.LEFT).onEnd(() => {runOnJS(onContinue)();});
+    const flingRight = Gesture.Fling().direction(Directions.RIGHT).onEnd((e) => {runOnJS(onBack)();});
     const composedGesture = Gesture.Simultaneous(flingLeft, flingRight);
 
     return (
