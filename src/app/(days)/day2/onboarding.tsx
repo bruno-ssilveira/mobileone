@@ -1,29 +1,27 @@
-import Animated, {
-  runOnJS,
-} from 'react-native-reanimated';
 import { Text, View, StyleSheet, Pressable } from "react-native"
 import { Stack, router } from "expo-router"
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { GestureDetector, Gesture, Directions } from "react-native-gesture-handler";
+import Animated, { runOnJS, SlideInLeft, BounceInLeft } from 'react-native-reanimated';
 
 const onboardingSteps = [
     {
         icon: 'money-bill-transfer',
         title: 'Track every transaction',
-        text: "Monitor your spending and contribution, ensuring every penny aligns with your family's aspirations."
+        description: "Monitor your spending and contribution, ensuring every penny aligns with your family's aspirations."
     },
     {
         icon: 'face-smile-beam',
         title: 'Smile with healthy financial',
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
     },
     {
         icon: 'paw',
         title: 'Give a better life to your pet',
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
     },
 ]
 
@@ -34,8 +32,8 @@ export default function OnboardingScreen() {
 
     const onContinue = () => {
         if(screenIndex === onboardingSteps.length -1) {
-            setScreenIndex(0);
             router.back();
+            setScreenIndex(0);
         } else {
             setScreenIndex(screenIndex + 1);
         }
@@ -52,7 +50,6 @@ export default function OnboardingScreen() {
         setScreenIndex(0);
         router.back();
     };
-
     
     const flingLeft = Gesture.Fling().direction(Directions.LEFT).onEnd(() => {runOnJS(onContinue)();});
     const flingRight = Gesture.Fling().direction(Directions.RIGHT).onEnd((e) => {runOnJS(onBack)();});
@@ -70,15 +67,15 @@ export default function OnboardingScreen() {
             </View>
 
             <GestureDetector gesture={composedGesture}>
-                <View
-                    style={styles.pageContent}
-                >
+                <View style={styles.pageContent} key={screenIndex}>
 
-                    <FontAwesome6 name={data.icon} size={100} color="#158000ff" style={styles.image} />
-
-                    <View style={styles.footer}>
+                    <FontAwesome6 name={data.icon} size={150} color="#158000ff" style={styles.image} />
+    
+                    <View style={{ flex: 1 }}>
+                    <Animated.View entering={BounceInLeft} style={styles.footer}>
                         <Text style={styles.title}>{data.title}</Text>
-                        <Text style={styles.description}>{data.text}</Text>
+                        <Text style={styles.description}>{data.description}</Text>
+                    </Animated.View>
                     </View>
                     
                     <View style={styles.buttonsRow}>
@@ -102,8 +99,8 @@ const styles = StyleSheet.create ({
     },
 
     pageContent: {
-        flex: 1,
         padding: 20,
+        flex: 1,
     },
 
     image: {
@@ -124,7 +121,7 @@ const styles = StyleSheet.create ({
         color: '#c8c8c8',
         fontSize: 20,
         fontFamily: 'InterRegular',
-        lineHeight: 34,
+        lineHeight: 28,
     },
 
     footer: {
@@ -134,8 +131,8 @@ const styles = StyleSheet.create ({
     buttonsRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 52,
-        gap: 60,
+        marginTop: 20,
+        gap: 20,
     },
     button: {
         backgroundColor: '#302E38',
@@ -148,13 +145,14 @@ const styles = StyleSheet.create ({
         fontFamily: 'InterSemiBold',
         fontSize: 16,
         padding: 15,
-        paddingHorizontal: 32,
+        paddingHorizontal: 25,
     },
 
     stepIndicatorContainer: {
         flexDirection: 'row',
         gap: 8,
-        marginHorizontal: 20,
+        marginHorizontal: 15,
+        marginVertical: 15,
     },
     stepIndicator: {
         flex: 1,
